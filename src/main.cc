@@ -5,9 +5,8 @@
 #include <muduo/net/InetAddress.h>
 
 #include <utility>
-
-#include <stdio.h>
 #include <unistd.h>
+#include "client.h"
 
 using namespace muduo;
 using namespace muduo::net;
@@ -19,7 +18,7 @@ public:
     MainServer(EventLoop* loop, const InetAddress& listenAddr)
         : loop_(loop),
         server_(loop, listenAddr, "MainServer") {
-        server_.setMessageCallback(
+        server_.setConnectionCallback(
                 std::bind(&MainServer::onConnection, this, _1));
         server_.setThreadNum(0);
     }
@@ -31,24 +30,26 @@ public:
 
 private:
     void onConnection(const TcpConnectionPtr& conn) {
-        LOG_TRACE << conn->peerAddress().toIpPort() << " -> "
+        LOG_INFO << conn->peerAddress().toIpPort() << " -> "
             << conn->localAddress().toIpPort() << " is "
             << (conn->connected() ? "UP" : "DOWN");
         LOG_INFO << conn->getTcpInfoString();
+        ClientPtr client(new Client(this, conn));
+        LOG_INFO << "connection name:" << conn->name();
+        clients_[conn->name()] = client;
     }
 
     EventLoop* loop_;
     TcpServer server_;
+    std::unordered_map<string, ClientPtr> clients_;
 };
 
 } // namespace hades
 
 int main(int argc, char* argv[]) {
     LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
-    LOG_INFO << "sizeof TcpConnection = " << sizeof(TcpConnection);
-    bool ipv6 = argc > 2;
     EventLoop loop;
-    InetAddress listenAddr(2000, false, ipv6);
+    InetAddress listenAddr(2000, false, false);
     hades::MainServer server(&loop, listenAddr);
 
     server.start();

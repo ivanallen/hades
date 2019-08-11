@@ -1,5 +1,9 @@
 #pragma once
+
+#include <muduo/base/Logging.h>
 #include <muduo/net/TcpConnection.h>
+#include <memory>
+#include "constants.h"
 
 namespace hades {
 
@@ -10,6 +14,7 @@ public:
         using std::placeholders::_1;
         using std::placeholders::_2;
         using std::placeholders::_3;
+        LOG_DEBUG << "Client()";
         conn_->setMessageCallback(std::bind(&Client::onMessage, this, _1, _2, _3));
     }
 
@@ -18,8 +23,17 @@ public:
             muduo::Timestamp time);
 
 private:
-    MainServer* owner_;
-    muduo::net::TcpConnectionPtr conn_;
+    int processMultibulkBuffer(muduo::net::Buffer* buf);
+    void reset();
+private:
+    MainServer* owner_ = nullptr;
+    muduo::net::TcpConnectionPtr conn_ = nullptr;
+    int reqType_ = 0;
+    int multiBulkLen_ = 0;
+    int bulkLen_ = -1;
+    std::vector<std::string> argv_;
 };
+
+using ClientPtr = std::shared_ptr<Client>;
 
 } // hades
