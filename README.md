@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/ivanallen/hades.svg?branch=master)](https://travis-ci.com/ivanallen/hades)
+
 # Introduce
 
-Hades 在战胜父亲克洛斯后，负责掌管下界冥土，成为冥王。他的罗马名字是普路同(Pluto)，九大行星中最小最外的冥王星。他是地狱和死人的统治者，审判死人给予惩罚。他的妻子是珀耳塞福涅(Persephone)，在巡视大地时抢回来的妻子。哈得斯同时是掌管财富的神职，掌管地下埋藏的黄金宝石。
+Hades was the king of the underworld and god of the dead. He presided over funeral rites and defended the right of the dead to due burial. Haides was also the god of the hidden wealth of the earth, from the fertile soil with nourished the seed-grain, to the mined wealth of gold, silver and other metals.
+
+Hades is also a high performance remote memory key-value database compliant with redis protocol.
