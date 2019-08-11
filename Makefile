@@ -1,4 +1,5 @@
-CC=g++
+CC?=gcc
+CXX?=g++
 CXXFLAGS=-std=c++17 -I./muduo/include
 LFLAGS=-L./lib -lmuduo_base -lmuduo_net -lpthread
 
@@ -17,10 +18,10 @@ prepare-dep:
 	@mkdir -p $(OBJ_DIR)
 
 hades:$(OBJ)
-	$(CC) -o $@ $(OBJ) $(LFLAGS) 
+	$(CXX) -o $@ $(OBJ) $(LFLAGS) 
 
 ${OBJ_DIR}/%.o:$(SRC_DIR)/%.cc $(INC)
-	${CC} ${CXXFLAGS} -o $@ -c $<
+	${CXX} ${CXXFLAGS} -o $@ -c $<
 
 clean:
 	rm -rf $(OBJ_DIR) hades
